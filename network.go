@@ -9,11 +9,11 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/Y-Technology/gogram/internal/encoding/tl"
-	"github.com/Y-Technology/gogram/internal/mtproto/messages"
-	"github.com/Y-Technology/gogram/internal/mtproto/objects"
-	"github.com/Y-Technology/gogram/internal/session"
-	"github.com/Y-Technology/gogram/internal/utils"
+	"github.com/Y-Technology/gogram-fork/internal/encoding/tl"
+	"github.com/Y-Technology/gogram-fork/internal/mtproto/messages"
+	"github.com/Y-Technology/gogram-fork/internal/mtproto/objects"
+	"github.com/Y-Technology/gogram-fork/internal/session"
+	"github.com/Y-Technology/gogram-fork/internal/utils"
 	"github.com/pkg/errors"
 )
 

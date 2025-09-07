@@ -4,7 +4,7 @@ import (
 	"sort"
 	"sync"
 
-	"github.com/Y-Technology/gogram/internal/cmd/tlgen/tlparser"
+	"github.com/Y-Technology/gogram-fork/internal/cmd/tlgen/tlparser"
 	"github.com/dave/jennifer/jen"
 )
 

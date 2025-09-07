@@ -1,7 +1,7 @@
 package examples
 
 import (
-	"github.com/Y-Technology/gogram/telegram"
+	"github.com/Y-Technology/gogram-fork/telegram"
 )
 
 // https://gist.github.com/AmarnathCJD/824907f8ec9e7aa9cec8278937fc437b

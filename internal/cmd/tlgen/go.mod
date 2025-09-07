@@ -1,4 +1,4 @@
-module github.com/Y-Technology/gogram/internal/cmd/tlgen
+module github.com/Y-Technology/gogram-fork/internal/cmd/tlgen
 
 go 1.23
 

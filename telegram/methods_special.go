@@ -5,7 +5,7 @@ package telegram
 import (
 	"github.com/pkg/errors"
 
-	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram-fork/internal/encoding/tl"
 )
 
 //invokeAfterMsg#cb9f372d {X:Type} msg_id:long query:!X = X;

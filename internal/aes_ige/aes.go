@@ -9,7 +9,7 @@ import (
 	"crypto/sha256"
 	"math/big"
 
-	"github.com/Y-Technology/gogram/internal/utils"
+	"github.com/Y-Technology/gogram-fork/internal/utils"
 	"github.com/pkg/errors"
 )
 

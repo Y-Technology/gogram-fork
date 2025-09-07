@@ -14,7 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/Y-Technology/gogram/internal/utils"
+	"github.com/Y-Technology/gogram-fork/internal/utils"
 )
 
 type CACHE struct {

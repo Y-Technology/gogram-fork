@@ -18,12 +18,12 @@ import (
 	"syscall"
 	"time"
 
-	mtproto "github.com/Y-Technology/gogram"
+	mtproto "github.com/Y-Technology/gogram-fork"
 	"github.com/pkg/errors"
 
-	"github.com/Y-Technology/gogram/internal/keys"
-	"github.com/Y-Technology/gogram/internal/session"
-	"github.com/Y-Technology/gogram/internal/utils"
+	"github.com/Y-Technology/gogram-fork/internal/keys"
+	"github.com/Y-Technology/gogram-fork/internal/session"
+	"github.com/Y-Technology/gogram-fork/internal/utils"
 )
 
 const (

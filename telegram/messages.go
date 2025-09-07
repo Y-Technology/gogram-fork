@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/Y-Technology/gogram"
+	"github.com/Y-Technology/gogram-fork"
 	"github.com/pkg/errors"
 )
 

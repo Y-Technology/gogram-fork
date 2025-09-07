@@ -3,7 +3,7 @@
 package objects
 
 import (
-	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram-fork/internal/encoding/tl"
 )
 
 func init() {

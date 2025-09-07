@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram-fork/internal/encoding/tl"
 )
 
 type intermediate struct {

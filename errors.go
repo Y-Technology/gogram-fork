@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Y-Technology/gogram/internal/mtproto/objects"
+	"github.com/Y-Technology/gogram-fork/internal/mtproto/objects"
 )
 
 type ErrResponseCode struct {

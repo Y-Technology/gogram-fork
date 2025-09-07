@@ -9,9 +9,9 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	ige "github.com/Y-Technology/gogram/internal/aes_ige"
-	"github.com/Y-Technology/gogram/internal/encoding/tl"
-	"github.com/Y-Technology/gogram/internal/utils"
+	ige "github.com/Y-Technology/gogram-fork/internal/aes_ige"
+	"github.com/Y-Technology/gogram-fork/internal/encoding/tl"
+	"github.com/Y-Technology/gogram-fork/internal/utils"
 	"github.com/pkg/errors"
 )
 

@@ -3,7 +3,7 @@
 package telegram
 
 import (
-	tl "github.com/Y-Technology/gogram/internal/encoding/tl"
+	tl "github.com/Y-Technology/gogram-fork/internal/encoding/tl"
 	errors "github.com/pkg/errors"
 	"reflect"
 )
