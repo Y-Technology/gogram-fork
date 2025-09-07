@@ -10,12 +10,12 @@ import (
 	"math/big"
 	"time"
 
-	ige "github.com/amarnathcjd/gogram/internal/aes_ige"
-	"github.com/amarnathcjd/gogram/internal/encoding/tl"
-	"github.com/amarnathcjd/gogram/internal/keys"
-	"github.com/amarnathcjd/gogram/internal/math"
-	"github.com/amarnathcjd/gogram/internal/mtproto/objects"
-	"github.com/amarnathcjd/gogram/internal/utils"
+	ige "github.com/Y-Technology/gogram/internal/aes_ige"
+	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram/internal/keys"
+	"github.com/Y-Technology/gogram/internal/math"
+	"github.com/Y-Technology/gogram/internal/mtproto/objects"
+	"github.com/Y-Technology/gogram/internal/utils"
 	"github.com/pkg/errors"
 )
 

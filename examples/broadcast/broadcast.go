@@ -1,7 +1,7 @@
 package examples
 
 import (
-	"github.com/amarnathcjd/gogram/telegram"
+	"github.com/Y-Technology/gogram/telegram"
 )
 
 // Broadcasting to bot users / chats using updates.GetDifference

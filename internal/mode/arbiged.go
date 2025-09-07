@@ -8,7 +8,7 @@ import (
 
 	"io"
 
-	"github.com/amarnathcjd/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram/internal/encoding/tl"
 )
 
 type abridged struct {
