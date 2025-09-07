@@ -1,5 +1,5 @@
 <p align="center">
-    <a href="https://github.com/Y-Technology/gogram">
+    <a href="https://github.com/Y-Technology/gogram-fork">
         <img src="https://i.imgur.com/RE1M0sM.png" alt="Gogram" width="256">
     </a>
     <br>
@@ -8,7 +8,7 @@
     <b>
     <a href="https://gogramdoc.vercel.app">documentation</a>
     &nbsp;•&nbsp;
-    <a href="https://github.com/Y-Technology/gogram/releases">releases</a>
+    <a href="https://github.com/Y-Technology/gogram-fork/releases">releases</a>
     &nbsp;•&nbsp;
     <a href="https://t.me/rosexchat">telegram chat</a>
     </b>
@@ -16,8 +16,8 @@
 
 <div align='center'>
 	
-[![GoDoc](https://godoc.org/github.com/Y-Technology/gogram?status.svg)](https://godoc.org/github.com/Y-Technology/gogram)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Y-Technology/gogram)](https://goreportcard.com/report/github.com/Y-Technology/gogram)
+[![GoDoc](https://godoc.org/github.com/Y-Technology/gogram-fork?status.svg)](https://godoc.org/github.com/Y-Technology/gogram-fork)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Y-Technology/gogram-fork)](https://goreportcard.com/report/github.com/Y-Technology/gogram-fork)
 [![License](https://img.shields.io/github/license/amarnathcjd/gogram.svg)](https://img.shields.io/github/license/amarnathcjd/gogram.svg)
 [![GitHub stars](https://img.shields.io/github/stars/amarnathcjd/gogram.svg?style=social&label=Stars)](https://img.shields.io/github/stars/amarnathcjd/gogram.svg?style=social&label=Stars)
 [![GitHub forks](https://img.shields.io/github/forks/amarnathcjd/gogram.svg?style=social&label=Fork)](https://img.shields.io/github/forks/amarnathcjd/gogram.svg?style=social&label=Fork)
@@ -43,7 +43,7 @@ identity (bot API alternative) using Go.</p>
 <p>please note that gogram requires Go <b>1.18</b> or later to support go-generics</p>
 
 ```bash
-go get -u github.com/Y-Technology/gogram/telegram
+go get -u github.com/Y-Technology/gogram-fork/telegram
 ```
 
 ## quick start
@@ -51,7 +51,7 @@ go get -u github.com/Y-Technology/gogram/telegram
 ```golang
 package main
 
-import "github.com/Y-Technology/gogram/telegram"
+import "github.com/Y-Technology/gogram-fork/telegram"
 
 func main() {
 	client, err := telegram.NewClient(telegram.ClientConfig{
@@ -196,3 +196,4 @@ Gogram is an open-source project and your contribution is very much appreciated.
 ## License
 
 This library is provided under the terms of the [GPL-3.0 License](LICENSE).
+# Force new version
