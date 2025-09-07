@@ -9,9 +9,9 @@ import (
 	"io"
 	"reflect"
 
-	"github.com/amarnathcjd/gogram/internal/encoding/tl"
-	"github.com/amarnathcjd/gogram/internal/mode"
-	"github.com/amarnathcjd/gogram/internal/mtproto/messages"
+	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram/internal/mode"
+	"github.com/Y-Technology/gogram/internal/mtproto/messages"
 	"github.com/pkg/errors"
 )
 

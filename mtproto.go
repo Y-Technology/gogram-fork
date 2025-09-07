@@ -20,13 +20,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/amarnathcjd/gogram/internal/encoding/tl"
-	"github.com/amarnathcjd/gogram/internal/mode"
-	"github.com/amarnathcjd/gogram/internal/mtproto/messages"
-	"github.com/amarnathcjd/gogram/internal/mtproto/objects"
-	"github.com/amarnathcjd/gogram/internal/session"
-	"github.com/amarnathcjd/gogram/internal/transport"
-	"github.com/amarnathcjd/gogram/internal/utils"
+	"github.com/Y-Technology/gogram/internal/encoding/tl"
+	"github.com/Y-Technology/gogram/internal/mode"
+	"github.com/Y-Technology/gogram/internal/mtproto/messages"
+	"github.com/Y-Technology/gogram/internal/mtproto/objects"
+	"github.com/Y-Technology/gogram/internal/session"
+	"github.com/Y-Technology/gogram/internal/transport"
+	"github.com/Y-Technology/gogram/internal/utils"
 	"github.com/pkg/errors"
 )
 

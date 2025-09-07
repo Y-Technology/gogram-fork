@@ -1,4 +1,4 @@
-module github.com/amarnathcjd/gogram
+module github.com/Y-Technology/gogram
 
 go 1.24.0
 
