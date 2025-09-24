@@ -593,7 +593,7 @@ func (*AccountGetBotBusinessConnectionParams) CRC() uint32 {
 }
 
 /*
-Bots may invoke this method to re-fetch the updateBotBusinessConnect constructor associated with a specific <a href="/api/business#connected-bots">business `connection_id`, see here »</a> for more info on connected business bots.<br>
+Bots may invoke this method to re-fetch the updateBotBusinessConnect constructor associated with a specific <a href="/api/bots/connected-business-bots">business `connection_id`, see here »</a> for more info on connected business bots.<br>
 This is needed for example for freshly logged in bots that are receiving some updateBotNewBusinessMessage, etc. updates because some users have already connected to the bot before it could login.<br>
 In this case, the bot is receiving messages from the business connection, but it hasn't cached the associated updateBotBusinessConnect with info about the connection (can it reply to messages? etc.) yet, and cannot receive the old ones because they were sent when the bot wasn't logged into the session yet.<br>
 This method can be used to fetch info about a not-yet-cached business connection, and should not be invoked if the info is already cached or to fetch changes, as eventual changes will automatically be sent as new updateBotBusinessConnect updates to the bot using the usual update delivery methods ».
@@ -705,6 +705,7 @@ func (*AccountGetCollectibleEmojiStatusesParams) CRC() uint32 {
 	return 0x2e7b4543
 }
 
+// Obtain a list of emoji statuses » for owned collectible gifts.
 func (c *Client) AccountGetCollectibleEmojiStatuses(hash int64) (AccountEmojiStatuses, error) {
 	responseData, err := c.MakeRequest(&AccountGetCollectibleEmojiStatusesParams{Hash: hash})
 	if err != nil {
@@ -1106,6 +1107,7 @@ func (*AccountGetSavedMusicIdsParams) CRC() uint32 {
 	return 0xe09d5faf
 }
 
+// Fetch the full list of only the IDs of songs currently added to the profile, see here » for more info.
 func (c *Client) AccountGetSavedMusicIds(hash int64) (AccountSavedMusicIds, error) {
 	responseData, err := c.MakeRequest(&AccountGetSavedMusicIdsParams{Hash: hash})
 	if err != nil {
@@ -1799,6 +1801,7 @@ func (*AccountSaveMusicParams) FlagIndex() int {
 	return 0
 }
 
+// Adds or removes a song from the current user's profile see here » for more info on the music tab of the profile page.
 func (c *Client) AccountSaveMusic(unsave bool, id, afterID InputDocument) (bool, error) {
 	responseData, err := c.MakeRequest(&AccountSaveMusicParams{
 		AfterID: afterID,
@@ -2148,6 +2151,7 @@ func (*AccountSetMainProfileTabParams) CRC() uint32 {
 	return 0x5dee78b0
 }
 
+// Changes the main profile tab of the current user, see here » for more info.
 func (c *Client) AccountSetMainProfileTab(tab ProfileTab) (bool, error) {
 	responseData, err := c.MakeRequest(&AccountSetMainProfileTabParams{Tab: tab})
 	if err != nil {
@@ -4350,6 +4354,7 @@ func (*ChannelsCheckSearchPostsFloodParams) FlagIndex() int {
 	return 0
 }
 
+// Check if the specified global post search » requires payment.
 func (c *Client) ChannelsCheckSearchPostsFlood(query string) (*SearchPostsFlood, error) {
 	responseData, err := c.MakeRequest(&ChannelsCheckSearchPostsFloodParams{Query: query})
 	if err != nil {
@@ -5531,7 +5536,7 @@ func (*ChannelsSearchPostsParams) FlagIndex() int {
 	return 0
 }
 
-// Globally search for posts from public channels » (<em>including</em> those we aren't a member of) containing a specific hashtag.
+// Globally search for posts from public channels » (<em>including</em> those we aren't a member of) containing either a specific hashtag, <em>or</em> a full text query.
 func (c *Client) ChannelsSearchPosts(params *ChannelsSearchPostsParams) (MessagesMessages, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -5632,6 +5637,7 @@ func (*ChannelsSetMainProfileTabParams) CRC() uint32 {
 	return 0x3583fcb1
 }
 
+// Changes the main profile tab of a channel, see here » for more info.
 func (c *Client) ChannelsSetMainProfileTab(channel InputChannel, tab ProfileTab) (bool, error) {
 	responseData, err := c.MakeRequest(&ChannelsSetMainProfileTabParams{
 		Channel: channel,
@@ -5709,6 +5715,7 @@ func (*ChannelsToggleAutotranslationParams) CRC() uint32 {
 	return 0x167fc0a1
 }
 
+// Toggle autotranslation in a channel, for all users: see here » for more info.
 func (c *Client) ChannelsToggleAutotranslation(channel InputChannel, enabled bool) (Updates, error) {
 	responseData, err := c.MakeRequest(&ChannelsToggleAutotranslationParams{
 		Channel: channel,
@@ -6415,10 +6422,11 @@ type ContactsAddContactParams struct {
 	FirstName                string
 	LastName                 string
 	Phone                    string
+	Note                     *TextWithEntities `tl:"flag:1"`
 }
 
 func (*ContactsAddContactParams) CRC() uint32 {
-	return 0xe8f463d0
+	return 0xd9ba2e54
 }
 
 func (*ContactsAddContactParams) FlagIndex() int {
@@ -6748,6 +6756,7 @@ func (*ContactsGetSponsoredPeersParams) CRC() uint32 {
 	return 0xb6c8c393
 }
 
+// Obtain a list of sponsored peer search results for a given query
 func (c *Client) ContactsGetSponsoredPeers(q string) (ContactsSponsoredPeers, error) {
 	responseData, err := c.MakeRequest(&ContactsGetSponsoredPeersParams{Q: q})
 	if err != nil {
@@ -7498,7 +7507,7 @@ func (*HelpGetPromoDataParams) CRC() uint32 {
 	return 0xc0977421
 }
 
-// Get MTProxy/Public Service Announcement information
+// Returns a set of useful suggestions and PSA/MTProxy sponsored peers, see here » for more info.
 func (c *Client) HelpGetPromoData() (HelpPromoData, error) {
 	responseData, err := c.MakeRequest(&HelpGetPromoDataParams{})
 	if err != nil {
@@ -7934,6 +7943,7 @@ func (*MessagesAppendTodoListParams) CRC() uint32 {
 	return 0x21a61057
 }
 
+// Appends one or more items to a todo list ».
 func (c *Client) MessagesAppendTodoList(peer InputPeer, msgID int32, list []*TodoItem) (Updates, error) {
 	responseData, err := c.MakeRequest(&MessagesAppendTodoListParams{
 		List:  list,
@@ -8011,6 +8021,33 @@ func (c *Client) MessagesCheckHistoryImportPeer(peer InputPeer) (*MessagesChecke
 	}
 
 	resp, ok := responseData.(*MessagesCheckedHistoryImportPeer)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesCheckPaidAuthParams struct {
+	PhoneNumber   string
+	PhoneCodeHash string
+	FormID        int64
+}
+
+func (*MessagesCheckPaidAuthParams) CRC() uint32 {
+	return 0x56e59f9c
+}
+
+func (c *Client) MessagesCheckPaidAuth(phoneNumber, phoneCodeHash string, formID int64) (AuthSentCode, error) {
+	responseData, err := c.MakeRequest(&MessagesCheckPaidAuthParams{
+		FormID:        formID,
+		PhoneCodeHash: phoneCodeHash,
+		PhoneNumber:   phoneNumber,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesCheckPaidAuth")
+	}
+
+	resp, ok := responseData.(AuthSentCode)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -8163,6 +8200,37 @@ func (c *Client) MessagesCreateChat(users []InputUser, title string, ttlPeriod i
 	}
 
 	resp, ok := responseData.(*MessagesInvitedUsers)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesCreateForumTopicParams struct {
+	TitleMissing bool `tl:"flag:4,encoded_in_bitflags"`
+	Peer         InputPeer
+	Title        string
+	IconColor    int32 `tl:"flag:0"`
+	IconEmojiID  int64 `tl:"flag:3"`
+	RandomID     int64
+	SendAs       InputPeer `tl:"flag:2"`
+}
+
+func (*MessagesCreateForumTopicParams) CRC() uint32 {
+	return 0x2f98c3d5
+}
+
+func (*MessagesCreateForumTopicParams) FlagIndex() int {
+	return 0
+}
+
+func (c *Client) MessagesCreateForumTopic(params *MessagesCreateForumTopicParams) (Updates, error) {
+	responseData, err := c.MakeRequest(params)
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesCreateForumTopic")
+	}
+
+	resp, ok := responseData.(Updates)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -8495,6 +8563,31 @@ func (c *Client) MessagesDeleteScheduledMessages(peer InputPeer, id []int32) (Up
 	return resp, nil
 }
 
+type MessagesDeleteTopicHistoryParams struct {
+	Peer     InputPeer
+	TopMsgID int32
+}
+
+func (*MessagesDeleteTopicHistoryParams) CRC() uint32 {
+	return 0xd2816f10
+}
+
+func (c *Client) MessagesDeleteTopicHistory(peer InputPeer, topMsgID int32) (*MessagesAffectedHistory, error) {
+	responseData, err := c.MakeRequest(&MessagesDeleteTopicHistoryParams{
+		Peer:     peer,
+		TopMsgID: topMsgID,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesDeleteTopicHistory")
+	}
+
+	resp, ok := responseData.(*MessagesAffectedHistory)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
 type MessagesDiscardEncryptionParams struct {
 	DeleteHistory bool `tl:"flag:0,encoded_in_bitflags"`
 	ChatID        int32
@@ -8708,6 +8801,36 @@ func (c *Client) MessagesEditFactCheck(peer InputPeer, msgID int32, text *TextWi
 	})
 	if err != nil {
 		return nil, errors.Wrap(err, "sending MessagesEditFactCheck")
+	}
+
+	resp, ok := responseData.(Updates)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesEditForumTopicParams struct {
+	Peer        InputPeer
+	TopicID     int32
+	Title       string `tl:"flag:0"`
+	IconEmojiID int64  `tl:"flag:1"`
+	Closed      bool   `tl:"flag:2"`
+	Hidden      bool   `tl:"flag:3"`
+}
+
+func (*MessagesEditForumTopicParams) CRC() uint32 {
+	return 0xcecc1134
+}
+
+func (*MessagesEditForumTopicParams) FlagIndex() int {
+	return 0
+}
+
+func (c *Client) MessagesEditForumTopic(params *MessagesEditForumTopicParams) (Updates, error) {
+	responseData, err := c.MakeRequest(params)
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesEditForumTopic")
 	}
 
 	resp, ok := responseData.(Updates)
@@ -9908,6 +10031,61 @@ func (c *Client) MessagesGetFeaturedStickers(hash int64) (MessagesFeaturedSticke
 	}
 
 	resp, ok := responseData.(MessagesFeaturedStickers)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesGetForumTopicsParams struct {
+	Peer        InputPeer
+	Q           string `tl:"flag:0"`
+	OffsetDate  int32
+	OffsetID    int32
+	OffsetTopic int32
+	Limit       int32
+}
+
+func (*MessagesGetForumTopicsParams) CRC() uint32 {
+	return 0x3ba47bff
+}
+
+func (*MessagesGetForumTopicsParams) FlagIndex() int {
+	return 0
+}
+
+func (c *Client) MessagesGetForumTopics(params *MessagesGetForumTopicsParams) (*MessagesForumTopics, error) {
+	responseData, err := c.MakeRequest(params)
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesGetForumTopics")
+	}
+
+	resp, ok := responseData.(*MessagesForumTopics)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesGetForumTopicsByIDParams struct {
+	Peer   InputPeer
+	Topics []int32
+}
+
+func (*MessagesGetForumTopicsByIDParams) CRC() uint32 {
+	return 0xaf0a4a08
+}
+
+func (c *Client) MessagesGetForumTopicsByID(peer InputPeer, topics []int32) (*MessagesForumTopics, error) {
+	responseData, err := c.MakeRequest(&MessagesGetForumTopicsByIDParams{
+		Peer:   peer,
+		Topics: topics,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesGetForumTopicsByID")
+	}
+
+	resp, ok := responseData.(*MessagesForumTopics)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -11160,6 +11338,33 @@ func (c *Client) MessagesGetTopReactions(limit int32, hash int64) (MessagesReact
 	return resp, nil
 }
 
+type MessagesGetUniqueGiftChatThemesParams struct {
+	Offset string
+	Limit  int32
+	Hash   int64
+}
+
+func (*MessagesGetUniqueGiftChatThemesParams) CRC() uint32 {
+	return 0xe42ce9c9
+}
+
+func (c *Client) MessagesGetUniqueGiftChatThemes(offset string, limit int32, hash int64) (*ChatThemes, error) {
+	responseData, err := c.MakeRequest(&MessagesGetUniqueGiftChatThemesParams{
+		Hash:   hash,
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesGetUniqueGiftChatThemes")
+	}
+
+	resp, ok := responseData.(*ChatThemes)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
 type MessagesGetUnreadMentionsParams struct {
 	Peer      InputPeer
 	TopMsgID  int32 `tl:"flag:0"`
@@ -11871,6 +12076,37 @@ func (c *Client) MessagesReorderPinnedDialogs(force bool, folderID int32, order 
 	}
 
 	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesReorderPinnedForumTopicsParams struct {
+	Force int32 `tl:"flag:0"`
+	Peer  InputPeer
+	Order []int32
+}
+
+func (*MessagesReorderPinnedForumTopicsParams) CRC() uint32 {
+	return 0xe7841f0
+}
+
+func (*MessagesReorderPinnedForumTopicsParams) FlagIndex() int {
+	return 0
+}
+
+func (c *Client) MessagesReorderPinnedForumTopics(force int32, peer InputPeer, order []int32) (Updates, error) {
+	responseData, err := c.MakeRequest(&MessagesReorderPinnedForumTopicsParams{
+		Force: force,
+		Order: order,
+		Peer:  peer,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesReorderPinnedForumTopics")
+	}
+
+	resp, ok := responseData.(Updates)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -12815,6 +13051,56 @@ func (c *Client) MessagesSendEncryptedService(peer *InputEncryptedChat, randomID
 	}
 
 	resp, ok := responseData.(MessagesSentEncryptedMessage)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesSendGroupCallEncryptedMessageParams struct {
+	Call             InputGroupCall
+	EncryptedMessage []byte
+}
+
+func (*MessagesSendGroupCallEncryptedMessageParams) CRC() uint32 {
+	return 0xe5afa56d
+}
+
+func (c *Client) MessagesSendGroupCallEncryptedMessage(call InputGroupCall, encryptedMessage []byte) (bool, error) {
+	responseData, err := c.MakeRequest(&MessagesSendGroupCallEncryptedMessageParams{
+		Call:             call,
+		EncryptedMessage: encryptedMessage,
+	})
+	if err != nil {
+		return false, errors.Wrap(err, "sending MessagesSendGroupCallEncryptedMessage")
+	}
+
+	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesSendGroupCallMessageParams struct {
+	Call    InputGroupCall
+	Message *TextWithEntities
+}
+
+func (*MessagesSendGroupCallMessageParams) CRC() uint32 {
+	return 0xdb608048
+}
+
+func (c *Client) MessagesSendGroupCallMessage(call InputGroupCall, message *TextWithEntities) (bool, error) {
+	responseData, err := c.MakeRequest(&MessagesSendGroupCallMessageParams{
+		Call:    call,
+		Message: message,
+	})
+	if err != nil {
+		return false, errors.Wrap(err, "sending MessagesSendGroupCallMessage")
+	}
+
+	resp, ok := responseData.(bool)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -13980,6 +14266,7 @@ func (*MessagesToggleTodoCompletedParams) CRC() uint32 {
 	return 0xd3e03124
 }
 
+// Mark one or more items of a todo list » as completed or not completed.
 func (c *Client) MessagesToggleTodoCompleted(peer InputPeer, msgID int32, completed, incompleted []int32) (Updates, error) {
 	responseData, err := c.MakeRequest(&MessagesToggleTodoCompletedParams{
 		Completed:   completed,
@@ -14112,6 +14399,60 @@ func (c *Client) MessagesUnpinAllMessages(peer InputPeer, topMsgID int32, savedP
 	return resp, nil
 }
 
+type MessagesUpdateColorParams struct {
+	ForProfile bool      `tl:"flag:1,encoded_in_bitflags"`
+	Color      PeerColor `tl:"flag:2"`
+}
+
+func (*MessagesUpdateColorParams) CRC() uint32 {
+	return 0x684d214e
+}
+
+func (*MessagesUpdateColorParams) FlagIndex() int {
+	return 0
+}
+
+func (c *Client) MessagesUpdateColor(forProfile bool, color PeerColor) (bool, error) {
+	responseData, err := c.MakeRequest(&MessagesUpdateColorParams{
+		Color:      color,
+		ForProfile: forProfile,
+	})
+	if err != nil {
+		return false, errors.Wrap(err, "sending MessagesUpdateColor")
+	}
+
+	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesUpdateContactNoteParams struct {
+	ID   InputUser
+	Note *TextWithEntities
+}
+
+func (*MessagesUpdateContactNoteParams) CRC() uint32 {
+	return 0x139f63fb
+}
+
+func (c *Client) MessagesUpdateContactNote(id InputUser, note *TextWithEntities) (bool, error) {
+	responseData, err := c.MakeRequest(&MessagesUpdateContactNoteParams{
+		ID:   id,
+		Note: note,
+	})
+	if err != nil {
+		return false, errors.Wrap(err, "sending MessagesUpdateContactNote")
+	}
+
+	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
 type MessagesUpdateDialogFilterParams struct {
 	ID     int32
 	Filter DialogFilter `tl:"flag:0"`
@@ -14158,6 +14499,33 @@ func (c *Client) MessagesUpdateDialogFiltersOrder(order []int32) (bool, error) {
 	}
 
 	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesUpdatePinnedForumTopicParams struct {
+	Peer    InputPeer
+	TopicID int32
+	Pinned  bool
+}
+
+func (*MessagesUpdatePinnedForumTopicParams) CRC() uint32 {
+	return 0x175df251
+}
+
+func (c *Client) MessagesUpdatePinnedForumTopic(peer InputPeer, topicID int32, pinned bool) (Updates, error) {
+	responseData, err := c.MakeRequest(&MessagesUpdatePinnedForumTopicParams{
+		Peer:    peer,
+		Pinned:  pinned,
+		TopicID: topicID,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesUpdatePinnedForumTopic")
+	}
+
+	resp, ok := responseData.(Updates)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -14233,7 +14601,7 @@ func (*MessagesUploadEncryptedFileParams) CRC() uint32 {
 	return 0x5057c497
 }
 
-// Upload encrypted file and associate it to a secret chat
+// Upload encrypted file and associate it to a secret chat (without actually sending it to the chat).
 func (c *Client) MessagesUploadEncryptedFile(peer *InputEncryptedChat, file InputEncryptedFile) (EncryptedFile, error) {
 	responseData, err := c.MakeRequest(&MessagesUploadEncryptedFileParams{
 		File: file,
@@ -14448,6 +14816,7 @@ func (*PaymentsCanPurchaseStoreParams) CRC() uint32 {
 	return 0x4fdc5ea7
 }
 
+// Checks whether a purchase is possible. Must be called before in-store purchase, official apps only.
 func (c *Client) PaymentsCanPurchaseStore(purpose InputStorePaymentPurpose) (bool, error) {
 	responseData, err := c.MakeRequest(&PaymentsCanPurchaseStoreParams{Purpose: purpose})
 	if err != nil {
@@ -14501,6 +14870,7 @@ func (*PaymentsCheckCanSendGiftParams) CRC() uint32 {
 	return 0xc0c4edc9
 }
 
+// Check if the specified gift » can be sent.
 func (c *Client) PaymentsCheckCanSendGift(giftID int64) (PaymentsCheckCanSendGiftResult, error) {
 	responseData, err := c.MakeRequest(&PaymentsCheckCanSendGiftParams{GiftID: giftID})
 	if err != nil {
@@ -14624,6 +14994,7 @@ func (*PaymentsCreateStarGiftCollectionParams) CRC() uint32 {
 	return 0x1f4a0e87
 }
 
+// Create a star gift collection ».
 func (c *Client) PaymentsCreateStarGiftCollection(peer InputPeer, title string, stargift []InputSavedStarGift) (*StarGiftCollection, error) {
 	responseData, err := c.MakeRequest(&PaymentsCreateStarGiftCollectionParams{
 		Peer:     peer,
@@ -14650,6 +15021,7 @@ func (*PaymentsDeleteStarGiftCollectionParams) CRC() uint32 {
 	return 0xad5648e8
 }
 
+// Delete a star gift collection ».
 func (c *Client) PaymentsDeleteStarGiftCollection(peer InputPeer, collectionID int32) (bool, error) {
 	responseData, err := c.MakeRequest(&PaymentsDeleteStarGiftCollectionParams{
 		CollectionID: collectionID,
@@ -14954,6 +15326,7 @@ func (*PaymentsGetResaleStarGiftsParams) FlagIndex() int {
 	return 0
 }
 
+// Get collectible gifts of a specific type currently on resale, see here » for more info.
 func (c *Client) PaymentsGetResaleStarGifts(params *PaymentsGetResaleStarGiftsParams) (*PaymentsResaleStarGifts, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -14995,6 +15368,7 @@ func (*PaymentsGetSavedStarGiftParams) CRC() uint32 {
 	return 0xb455a106
 }
 
+// Fetch info about specific gifts owned by a peer we control.
 func (c *Client) PaymentsGetSavedStarGift(stargift []InputSavedStarGift) (*PaymentsSavedStarGifts, error) {
 	responseData, err := c.MakeRequest(&PaymentsGetSavedStarGiftParams{Stargift: stargift})
 	if err != nil {
@@ -15012,11 +15386,11 @@ type PaymentsGetSavedStarGiftsParams struct {
 	ExcludeUnsaved      bool `tl:"flag:0,encoded_in_bitflags"`
 	ExcludeSaved        bool `tl:"flag:1,encoded_in_bitflags"`
 	ExcludeUnlimited    bool `tl:"flag:2,encoded_in_bitflags"`
-	ExcludeLimited      bool `tl:"flag:3,encoded_in_bitflags"`
 	ExcludeUnique       bool `tl:"flag:4,encoded_in_bitflags"`
 	SortByValue         bool `tl:"flag:5,encoded_in_bitflags"`
 	ExcludeUpgradable   bool `tl:"flag:7,encoded_in_bitflags"`
 	ExcludeUnupgradable bool `tl:"flag:8,encoded_in_bitflags"`
+	PeerColorAvailable  bool `tl:"flag:9,encoded_in_bitflags"`
 	Peer                InputPeer
 	CollectionID        int32 `tl:"flag:6"`
 	Offset              string
@@ -15031,6 +15405,7 @@ func (*PaymentsGetSavedStarGiftsParams) FlagIndex() int {
 	return 0
 }
 
+// Fetch the full list of gifts owned by a peer.
 func (c *Client) PaymentsGetSavedStarGifts(params *PaymentsGetSavedStarGiftsParams) (*PaymentsSavedStarGifts, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -15053,6 +15428,7 @@ func (*PaymentsGetStarGiftCollectionsParams) CRC() uint32 {
 	return 0x981b91dd
 }
 
+// Fetches all star gift collections » of a peer.
 func (c *Client) PaymentsGetStarGiftCollections(peer InputPeer, hash int64) (PaymentsStarGiftCollections, error) {
 	responseData, err := c.MakeRequest(&PaymentsGetStarGiftCollectionsParams{
 		Hash: hash,
@@ -15100,6 +15476,7 @@ func (*PaymentsGetStarGiftWithdrawalURLParams) CRC() uint32 {
 	return 0xd06e93a8
 }
 
+// Convert a collectible gift » to an NFT on the TON blockchain.
 func (c *Client) PaymentsGetStarGiftWithdrawalURL(stargift InputSavedStarGift, password InputCheckPasswordSRP) (*PaymentsStarGiftWithdrawalURL, error) {
 	responseData, err := c.MakeRequest(&PaymentsGetStarGiftWithdrawalURLParams{
 		Password: password,
@@ -15457,6 +15834,7 @@ func (*PaymentsGetUniqueStarGiftParams) CRC() uint32 {
 	return 0xa1974d72
 }
 
+// Obtain info about a collectible gift » using a slug obtained from a collectible gift link ».
 func (c *Client) PaymentsGetUniqueStarGift(slug string) (*PaymentsUniqueStarGift, error) {
 	responseData, err := c.MakeRequest(&PaymentsGetUniqueStarGiftParams{Slug: slug})
 	if err != nil {
@@ -15554,6 +15932,7 @@ func (*PaymentsReorderStarGiftCollectionsParams) CRC() uint32 {
 	return 0xc32af4cc
 }
 
+// Reorder the star gift collections » on an owned peer's profile.
 func (c *Client) PaymentsReorderStarGiftCollections(peer InputPeer, order []int32) (bool, error) {
 	responseData, err := c.MakeRequest(&PaymentsReorderStarGiftCollectionsParams{
 		Order: order,
@@ -15697,6 +16076,7 @@ func (*PaymentsToggleChatStarGiftNotificationsParams) FlagIndex() int {
 	return 0
 }
 
+// Enables or disables the reception of notifications every time a gift » is received by the specified channel, can only be invoked by admins with `post_messages` admin rights.
 func (c *Client) PaymentsToggleChatStarGiftNotifications(enabled bool, peer InputPeer) (bool, error) {
 	responseData, err := c.MakeRequest(&PaymentsToggleChatStarGiftNotificationsParams{
 		Enabled: enabled,
@@ -15722,6 +16102,7 @@ func (*PaymentsToggleStarGiftsPinnedToTopParams) CRC() uint32 {
 	return 0x1513e7b0
 }
 
+// Pins a received gift on top of the profile of the user or owned channels by using payments.toggleStarGiftsPinnedToTop.
 func (c *Client) PaymentsToggleStarGiftsPinnedToTop(peer InputPeer, stargift []InputSavedStarGift) (bool, error) {
 	responseData, err := c.MakeRequest(&PaymentsToggleStarGiftsPinnedToTopParams{
 		Peer:     peer,
@@ -15747,6 +16128,7 @@ func (*PaymentsTransferStarGiftParams) CRC() uint32 {
 	return 0x7f18176a
 }
 
+// Transfer a collectible gift to another user or channel: can only be used if transfer is free (i.e. messageActionStarGiftUnique.`transfer_stars` is not set); see here » for more info on the full flow (including the different flow to use in case the transfer isn't free).
 func (c *Client) PaymentsTransferStarGift(stargift InputSavedStarGift, toID InputPeer) (Updates, error) {
 	responseData, err := c.MakeRequest(&PaymentsTransferStarGiftParams{
 		Stargift: stargift,
@@ -15780,6 +16162,7 @@ func (*PaymentsUpdateStarGiftCollectionParams) FlagIndex() int {
 	return 0
 }
 
+// Add or remove gifts from a star gift collection », or rename the collection.
 func (c *Client) PaymentsUpdateStarGiftCollection(params *PaymentsUpdateStarGiftCollectionParams) (*StarGiftCollection, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -15802,6 +16185,7 @@ func (*PaymentsUpdateStarGiftPriceParams) CRC() uint32 {
 	return 0xedbe6ccb
 }
 
+// A collectible gift we own » can be put up for sale on the gift marketplace » with this method, see here » for more info.
 func (c *Client) PaymentsUpdateStarGiftPrice(stargift InputSavedStarGift, resellAmount StarsAmount) (Updates, error) {
 	responseData, err := c.MakeRequest(&PaymentsUpdateStarGiftPriceParams{
 		ResellAmount: resellAmount,
@@ -15831,6 +16215,7 @@ func (*PaymentsUpgradeStarGiftParams) FlagIndex() int {
 	return 0
 }
 
+// Upgrade a gift to a collectible gift: can only be used if the upgrade was already paid by the gift sender; see here » for more info on the full flow (including the different flow to use in case the upgrade was not paid by the gift sender).
 func (c *Client) PaymentsUpgradeStarGift(keepOriginalDetails bool, stargift InputSavedStarGift) (Updates, error) {
 	responseData, err := c.MakeRequest(&PaymentsUpgradeStarGiftParams{
 		KeepOriginalDetails: keepOriginalDetails,
@@ -16036,6 +16421,7 @@ func (*PhoneDeclineConferenceCallInviteParams) CRC() uint32 {
 	return 0x3c479971
 }
 
+// Declines a conference call invite.
 func (c *Client) PhoneDeclineConferenceCallInvite(msgID int32) (Updates, error) {
 	responseData, err := c.MakeRequest(&PhoneDeclineConferenceCallInviteParams{MsgID: msgID})
 	if err != nil {
@@ -16065,6 +16451,7 @@ func (*PhoneDeleteConferenceCallParticipantsParams) FlagIndex() int {
 	return 0
 }
 
+// Remove participants from a conference call.
 func (c *Client) PhoneDeleteConferenceCallParticipants(params *PhoneDeleteConferenceCallParticipantsParams) (Updates, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -16276,6 +16663,7 @@ func (*PhoneGetGroupCallChainBlocksParams) CRC() uint32 {
 	return 0xee9f88a6
 }
 
+// Fetch the blocks of a conference blockchain ».
 func (c *Client) PhoneGetGroupCallChainBlocks(call InputGroupCall, subChainID, offset, limit int32) (Updates, error) {
 	responseData, err := c.MakeRequest(&PhoneGetGroupCallChainBlocksParams{
 		Call:       call,
@@ -16414,6 +16802,7 @@ func (*PhoneInviteConferenceCallParticipantParams) FlagIndex() int {
 	return 0
 }
 
+// Invite a user to a conference call.
 func (c *Client) PhoneInviteConferenceCallParticipant(video bool, call InputGroupCall, userID InputUser) (Updates, error) {
 	responseData, err := c.MakeRequest(&PhoneInviteConferenceCallParticipantParams{
 		Call:   call,
@@ -16703,6 +17092,7 @@ func (*PhoneSendConferenceCallBroadcastParams) CRC() uint32 {
 	return 0xc6701900
 }
 
+// Broadcast a blockchain block to all members of a conference call, see here » for more info.
 func (c *Client) PhoneSendConferenceCallBroadcast(call InputGroupCall, block []byte) (Updates, error) {
 	responseData, err := c.MakeRequest(&PhoneSendConferenceCallBroadcastParams{
 		Block: block,
@@ -17897,6 +18287,7 @@ func (*StoriesCreateAlbumParams) CRC() uint32 {
 	return 0xa36396e5
 }
 
+// Creates a story album.
 func (c *Client) StoriesCreateAlbum(peer InputPeer, title string, stories []int32) (*StoryAlbum, error) {
 	responseData, err := c.MakeRequest(&StoriesCreateAlbumParams{
 		Peer:    peer,
@@ -17923,6 +18314,7 @@ func (*StoriesDeleteAlbumParams) CRC() uint32 {
 	return 0x8d3456d0
 }
 
+// Delete a story album.
 func (c *Client) StoriesDeleteAlbum(peer InputPeer, albumID int32) (bool, error) {
 	responseData, err := c.MakeRequest(&StoriesDeleteAlbumParams{
 		AlbumID: albumID,
@@ -18034,6 +18426,7 @@ func (*StoriesGetAlbumStoriesParams) CRC() uint32 {
 	return 0xac806d61
 }
 
+// Get stories in a story album ».
 func (c *Client) StoriesGetAlbumStories(peer InputPeer, albumID, offset, limit int32) (*StoriesStories, error) {
 	responseData, err := c.MakeRequest(&StoriesGetAlbumStoriesParams{
 		AlbumID: albumID,
@@ -18061,6 +18454,7 @@ func (*StoriesGetAlbumsParams) CRC() uint32 {
 	return 0x25b3eac7
 }
 
+// Get story albums created by a peer.
 func (c *Client) StoriesGetAlbums(peer InputPeer, hash int64) (StoriesAlbums, error) {
 	responseData, err := c.MakeRequest(&StoriesGetAlbumsParams{
 		Hash: hash,
@@ -18426,6 +18820,7 @@ func (*StoriesReorderAlbumsParams) CRC() uint32 {
 	return 0x8535fbd9
 }
 
+// Reorder story albums on a profile ».
 func (c *Client) StoriesReorderAlbums(peer InputPeer, order []int32) (bool, error) {
 	responseData, err := c.MakeRequest(&StoriesReorderAlbumsParams{
 		Order: order,
@@ -18694,6 +19089,7 @@ func (*StoriesUpdateAlbumParams) FlagIndex() int {
 	return 0
 }
 
+// Rename a story albums », or add, delete or reorder stories in it.
 func (c *Client) StoriesUpdateAlbum(params *StoriesUpdateAlbumParams) (*StoryAlbum, error) {
 	responseData, err := c.MakeRequest(params)
 	if err != nil {
@@ -19065,6 +19461,7 @@ func (*UsersGetSavedMusicParams) CRC() uint32 {
 	return 0x788d7fe3
 }
 
+// Get songs pinned to the user's profile, see here » for more info.
 func (c *Client) UsersGetSavedMusic(id InputUser, offset, limit int32, hash int64) (UsersSavedMusic, error) {
 	responseData, err := c.MakeRequest(&UsersGetSavedMusicParams{
 		Hash:   hash,
@@ -19092,6 +19489,7 @@ func (*UsersGetSavedMusicByIDParams) CRC() uint32 {
 	return 0x7573a4e9
 }
 
+// Check if the passed songs are still pinned to the user's profile, or refresh the file references of songs pinned on a user's profile see here » for more info.
 func (c *Client) UsersGetSavedMusicByID(id InputUser, documents []InputDocument) (UsersSavedMusic, error) {
 	responseData, err := c.MakeRequest(&UsersGetSavedMusicByIDParams{
 		Documents: documents,
@@ -19164,6 +19562,31 @@ func (c *Client) UsersSetSecureValueErrors(id InputUser, errorsw []SecureValueEr
 	}
 
 	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type UsersSuggestBirthdayParams struct {
+	ID       InputUser
+	Birthday *Birthday
+}
+
+func (*UsersSuggestBirthdayParams) CRC() uint32 {
+	return 0xfc533372
+}
+
+func (c *Client) UsersSuggestBirthday(id InputUser, birthday *Birthday) (Updates, error) {
+	responseData, err := c.MakeRequest(&UsersSuggestBirthdayParams{
+		Birthday: birthday,
+		ID:       id,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending UsersSuggestBirthday")
+	}
+
+	resp, ok := responseData.(Updates)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
