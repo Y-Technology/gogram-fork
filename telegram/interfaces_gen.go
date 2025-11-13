@@ -2723,10 +2723,11 @@ type GroupCallObj struct {
 	Version                  int32
 	InviteLink               string `tl:"flag:16"`
 	SendPaidMessagesStars    int64  `tl:"flag:20"`
+	DefaultSendAs            Peer   `tl:"flag:21"`
 }
 
 func (*GroupCallObj) CRC() uint32 {
-	return 0xd7ca61d8
+	return 0xefb2b617
 }
 
 func (*GroupCallObj) FlagIndex() int {
@@ -3720,6 +3721,25 @@ func (*InputInvoiceStarGift) FlagIndex() int {
 
 func (*InputInvoiceStarGift) ImplementsInputInvoice() {}
 
+type InputInvoiceStarGiftAuctionBid struct {
+	HideName  bool      `tl:"flag:0,encoded_in_bitflags"`
+	UpdateBid bool      `tl:"flag:2,encoded_in_bitflags"`
+	Peer      InputPeer `tl:"flag:3"`
+	GiftID    int64
+	BidAmount int64
+	Message   *TextWithEntities `tl:"flag:1"`
+}
+
+func (*InputInvoiceStarGiftAuctionBid) CRC() uint32 {
+	return 0x1ecafa10
+}
+
+func (*InputInvoiceStarGiftAuctionBid) FlagIndex() int {
+	return 0
+}
+
+func (*InputInvoiceStarGiftAuctionBid) ImplementsInputInvoice() {}
+
 type InputInvoiceStarGiftDropOriginalDetails struct {
 	Stargift InputSavedStarGift
 }
@@ -4649,6 +4669,30 @@ func (*InputSecureFileUploaded) CRC() uint32 {
 }
 
 func (*InputSecureFileUploaded) ImplementsInputSecureFile() {}
+
+type InputStarGiftAuction interface {
+	tl.Object
+	ImplementsInputStarGiftAuction()
+}
+type InputStarGiftAuctionObj struct {
+	GiftID int64
+}
+
+func (*InputStarGiftAuctionObj) CRC() uint32 {
+	return 0x2e16c98
+}
+
+func (*InputStarGiftAuctionObj) ImplementsInputStarGiftAuction() {}
+
+type InputStarGiftAuctionSlug struct {
+	Slug string
+}
+
+func (*InputStarGiftAuctionSlug) CRC() uint32 {
+	return 0x7ab58308
+}
+
+func (*InputStarGiftAuctionSlug) ImplementsInputStarGiftAuction() {}
 
 type InputStickerSet interface {
 	tl.Object
@@ -5987,7 +6031,7 @@ type MessageActionGiftCode struct {
 	ViaGiveaway    bool              `tl:"flag:0,encoded_in_bitflags"` // If set, this gift code was received from a giveaway  started by a channel/supergroup we're subscribed to.
 	Unclaimed      bool              `tl:"flag:5,encoded_in_bitflags"` // If set, the link was not redeemed yet.
 	BoostPeer      Peer              `tl:"flag:1"`                     // Identifier of the channel/supergroup that created the gift code either directly or through a giveaway: if we import this giftcode link, we will also automatically boost this channel/supergroup.
-	Months         int32             // Duration in months of the gifted Telegram Premium subscription.
+	Days           int32             // Duration in months of the gifted Telegram Premium subscription.
 	Slug           string            // Slug of the Telegram Premium giftcode link
 	Currency       string            `tl:"flag:2"` // Three-letter ISO 4217 currency code
 	Amount         int64             `tl:"flag:2"` // Total price in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
@@ -5997,7 +6041,7 @@ type MessageActionGiftCode struct {
 }
 
 func (*MessageActionGiftCode) CRC() uint32 {
-	return 0x56d03994
+	return 0x31c48347
 }
 
 func (*MessageActionGiftCode) FlagIndex() int {
@@ -6010,14 +6054,14 @@ func (*MessageActionGiftCode) ImplementsMessageAction() {}
 type MessageActionGiftPremium struct {
 	Currency       string            // Three-letter ISO 4217 currency code
 	Amount         int64             // Price of the gift in the smallest units of the currency (integer, not float/double). For example, for a price of US$ 1.45 pass amount = 145. See the exp parameter in currencies.json, it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
-	Months         int32             // Duration of the gifted Telegram Premium subscription.
+	Days           int32             // Duration of the gifted Telegram Premium subscription.
 	CryptoCurrency string            `tl:"flag:0"` // If the gift was bought using a cryptocurrency, the cryptocurrency name.
 	CryptoAmount   int64             `tl:"flag:0"` // If the gift was bought using a cryptocurrency, price of the gift in the smallest units of a cryptocurrency.
 	Message        *TextWithEntities `tl:"flag:1"` // Message attached with the gift
 }
 
 func (*MessageActionGiftPremium) CRC() uint32 {
-	return 0x6c6274fa
+	return 0x48e91302
 }
 
 func (*MessageActionGiftPremium) FlagIndex() int {
@@ -6415,6 +6459,7 @@ type MessageActionStarGift struct {
 	Refunded           bool `tl:"flag:9,encoded_in_bitflags"`
 	PrepaidUpgrade     bool `tl:"flag:13,encoded_in_bitflags"`
 	UpgradeSeparate    bool `tl:"flag:16,encoded_in_bitflags"`
+	AuctionAcquired    bool `tl:"flag:17,encoded_in_bitflags"`
 	Gift               StarGift
 	Message            *TextWithEntities `tl:"flag:1"`
 	ConvertStars       int64             `tl:"flag:4"`
@@ -6425,10 +6470,11 @@ type MessageActionStarGift struct {
 	SavedID            int64             `tl:"flag:12"`
 	PrepaidUpgradeHash string            `tl:"flag:14"`
 	GiftMsgID          int32             `tl:"flag:15"`
+	ToID               Peer              `tl:"flag:18"`
 }
 
 func (*MessageActionStarGift) CRC() uint32 {
-	return 0xf24de7fa
+	return 0xdb596550
 }
 
 func (*MessageActionStarGift) FlagIndex() int {
@@ -9869,6 +9915,7 @@ type StarGiftObj struct {
 	RequirePremium      bool `tl:"flag:7,encoded_in_bitflags"`
 	LimitedPerUser      bool `tl:"flag:8,encoded_in_bitflags"`
 	PeerColorAvailable  bool `tl:"flag:10,encoded_in_bitflags"`
+	Auction             bool `tl:"flag:11,encoded_in_bitflags"`
 	ID                  int64
 	Sticker             Document
 	Stars               int64
@@ -9885,10 +9932,12 @@ type StarGiftObj struct {
 	PerUserTotal        int32  `tl:"flag:8"`
 	PerUserRemains      int32  `tl:"flag:8"`
 	LockedUntilDate     int32  `tl:"flag:9"`
+	AuctionSlug         string `tl:"flag:11"`
+	GiftsPerRound       int32  `tl:"flag:11"`
 }
 
 func (*StarGiftObj) CRC() uint32 {
-	return 0x80ac53c3
+	return 0x1b9a4d7f
 }
 
 func (*StarGiftObj) FlagIndex() int {
@@ -9932,6 +9981,29 @@ func (*StarGiftUnique) FlagIndex() int {
 }
 
 func (*StarGiftUnique) ImplementsStarGift() {}
+
+type StarGiftActiveAuctions interface {
+	tl.Object
+	ImplementsStarGiftActiveAuctions()
+}
+type StarGiftActiveAuctionsObj struct {
+	Auctions []*StarGiftActiveAuctionState
+	Users    []User
+}
+
+func (*StarGiftActiveAuctionsObj) CRC() uint32 {
+	return 0x97f187d8
+}
+
+func (*StarGiftActiveAuctionsObj) ImplementsStarGiftActiveAuctions() {}
+
+type StarGiftActiveAuctionsNotModified struct{}
+
+func (*StarGiftActiveAuctionsNotModified) CRC() uint32 {
+	return 0xdb33dad0
+}
+
+func (*StarGiftActiveAuctionsNotModified) ImplementsStarGiftActiveAuctions() {}
 
 type StarGiftAttribute interface {
 	tl.Object
@@ -10036,6 +10108,49 @@ func (*StarGiftAttributeIDPattern) CRC() uint32 {
 }
 
 func (*StarGiftAttributeIDPattern) ImplementsStarGiftAttributeID() {}
+
+type StarGiftAuctionState interface {
+	tl.Object
+	ImplementsStarGiftAuctionState()
+}
+type StarGiftAuctionStateObj struct {
+	Version      int32
+	StartDate    int32
+	EndDate      int32
+	MinBidAmount int64
+	BidLevels    []*AuctionBidLevel
+	TopBidders   []int64
+	NextRoundAt  int32
+	GiftsLeft    int32
+	CurrentRound int32
+	TotalRounds  int32
+}
+
+func (*StarGiftAuctionStateObj) CRC() uint32 {
+	return 0x5db04f4b
+}
+
+func (*StarGiftAuctionStateObj) ImplementsStarGiftAuctionState() {}
+
+type StarGiftAuctionStateFinished struct {
+	StartDate    int32
+	EndDate      int32
+	AveragePrice int64
+}
+
+func (*StarGiftAuctionStateFinished) CRC() uint32 {
+	return 0x7d967c3a
+}
+
+func (*StarGiftAuctionStateFinished) ImplementsStarGiftAuctionState() {}
+
+type StarGiftAuctionStateNotModified struct{}
+
+func (*StarGiftAuctionStateNotModified) CRC() uint32 {
+	return 0xfe333952
+}
+
+func (*StarGiftAuctionStateNotModified) ImplementsStarGiftAuctionState() {}
 
 type StarsAmount interface {
 	tl.Object
@@ -10301,10 +10416,11 @@ func (*StoryItemDeleted) ImplementsStoryItem() {}
 
 // Represents an active story, whose full information was omitted for space and performance reasons; use stories.getStoriesByID to fetch full info about the skipped story when and if needed.
 type StoryItemSkipped struct {
-	CloseFriends bool  `tl:"flag:8,encoded_in_bitflags"` // Whether this story can only be viewed by our close friends
-	ID           int32 // Story ID
-	Date         int32 // When was the story posted.
-	ExpireDate   int32 // When does the story expire.
+	CloseFriends bool `tl:"flag:8,encoded_in_bitflags"`
+	Live         bool `tl:"flag:9,encoded_in_bitflags"`
+	ID           int32
+	Date         int32
+	ExpireDate   int32
 }
 
 func (*StoryItemSkipped) CRC() uint32 {
@@ -12252,6 +12368,28 @@ func (*UpdateSmsJob) CRC() uint32 {
 
 func (*UpdateSmsJob) ImplementsUpdate() {}
 
+type UpdateStarGiftAuctionState struct {
+	GiftID int64
+	State  StarGiftAuctionState
+}
+
+func (*UpdateStarGiftAuctionState) CRC() uint32 {
+	return 0x48e246c2
+}
+
+func (*UpdateStarGiftAuctionState) ImplementsUpdate() {}
+
+type UpdateStarGiftAuctionUserState struct {
+	GiftID    int64
+	UserState *StarGiftAuctionUserState
+}
+
+func (*UpdateStarGiftAuctionUserState) CRC() uint32 {
+	return 0xdc58f31e
+}
+
+func (*UpdateStarGiftAuctionUserState) ImplementsUpdate() {}
+
 // The current account's Telegram Stars balance » has changed.
 type UpdateStarsBalance struct {
 	Balance StarsAmount // New balance.
@@ -13139,6 +13277,19 @@ type WebPageAttribute interface {
 	tl.Object
 	ImplementsWebPageAttribute()
 }
+type WebPageAttributeStarGiftAuction struct {
+	Gift        StarGift
+	EndDate     int32
+	CenterColor int32
+	EdgeColor   int32
+	TextColor   int32
+}
+
+func (*WebPageAttributeStarGiftAuction) CRC() uint32 {
+	return 0x34986ab
+}
+
+func (*WebPageAttributeStarGiftAuction) ImplementsWebPageAttribute() {}
 
 // Contains info about a gift collection » for a webPage preview of a gift collection » (the webPage will have a `type` of `telegram_collection`).
 type WebPageAttributeStarGiftCollection struct {
