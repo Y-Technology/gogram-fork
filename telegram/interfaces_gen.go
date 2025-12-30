@@ -2246,6 +2246,36 @@ func (*EmailVerifyPurposePassport) CRC() uint32 {
 
 func (*EmailVerifyPurposePassport) ImplementsEmailVerifyPurpose() {}
 
+type EmojiGameInfo interface {
+	tl.Object
+	ImplementsEmojiGameInfo()
+}
+type EmojiGameDiceInfo struct {
+	GameHash      string
+	PrevStake     int64
+	CurrentStreak int32
+	Params        []int32
+	PlaysLeft     int32 `tl:"flag:0"`
+}
+
+func (*EmojiGameDiceInfo) CRC() uint32 {
+	return 0x44e56023
+}
+
+func (*EmojiGameDiceInfo) FlagIndex() int {
+	return 0
+}
+
+func (*EmojiGameDiceInfo) ImplementsEmojiGameInfo() {}
+
+type EmojiGameUnavailable struct{}
+
+func (*EmojiGameUnavailable) CRC() uint32 {
+	return 0x59e65335
+}
+
+func (*EmojiGameUnavailable) ImplementsEmojiGameInfo() {}
+
 type EmojiGroup interface {
 	tl.Object
 	ImplementsEmojiGroup()
@@ -4029,6 +4059,18 @@ func (*InputMediaPoll) FlagIndex() int {
 
 func (*InputMediaPoll) ImplementsInputMedia() {}
 
+type InputMediaStakeDice struct {
+	GameHash   string
+	TonAmount  int64
+	ClientSeed []byte
+}
+
+func (*InputMediaStakeDice) CRC() uint32 {
+	return 0xf3a9244a
+}
+
+func (*InputMediaStakeDice) ImplementsInputMedia() {}
+
 // Forwarded story
 type InputMediaStory struct {
 	Peer InputPeer // Peer where the story was posted
@@ -4250,8 +4292,8 @@ func (*InputPasskeyResponseLogin) CRC() uint32 {
 func (*InputPasskeyResponseLogin) ImplementsInputPasskeyResponse() {}
 
 type InputPasskeyResponseRegister struct {
-	ClientData        *DataJson
-	AttestationObject []byte
+	ClientData      *DataJson
+	AttestationData []byte
 }
 
 func (*InputPasskeyResponseRegister) CRC() uint32 {
@@ -5761,10 +5803,11 @@ type MessageObj struct {
 	PaidMessageStars        int64                `tl:"flag2:6"`
 	SuggestedPost           *SuggestedPost       `tl:"flag2:7"`
 	ScheduleRepeatPeriod    int32                `tl:"flag2:10"`
+	SummaryFromLanguage     string               `tl:"flag2:11"`
 }
 
 func (*MessageObj) CRC() uint32 {
-	return 0xb92f76cf
+	return 0x9cb490e9
 }
 
 func (*MessageObj) FlagIndex() int {
@@ -6514,6 +6557,7 @@ func (*MessageActionStarGift) ImplementsMessageAction() {}
 
 type MessageActionStarGiftPurchaseOffer struct {
 	Accepted  int32 `tl:"flag:0"`
+	Declined  bool  `tl:"flag:1,encoded_in_bitflags"`
 	Gift      StarGift
 	Price     StarsAmount
 	ExpiresAt int32
@@ -6530,7 +6574,7 @@ func (*MessageActionStarGiftPurchaseOffer) FlagIndex() int {
 func (*MessageActionStarGiftPurchaseOffer) ImplementsMessageAction() {}
 
 type MessageActionStarGiftPurchaseOfferDeclined struct {
-	Expired int32 `tl:"flag:0"`
+	Expired bool `tl:"flag:0,encoded_in_bitflags"`
 	Gift    StarGift
 	Price   StarsAmount
 }
@@ -7078,12 +7122,17 @@ func (*MessageMediaContact) ImplementsMessageMedia() {}
 
 // Dice-based animated sticker
 type MessageMediaDice struct {
-	Value    int32  // Dice value
-	Emoticon string // The emoji, for now <img class="emoji" src="//telegram.org/img/emoji/40/F09F8F80.png" width="20" height="20" alt="🏀" />, <img class="emoji" src="//telegram.org/img/emoji/40/F09F8EB2.png" width="20" height="20" alt="🎲" /> and <img class="emoji" src="//telegram.org/img/emoji/40/F09F8EAF.png" width="20" height="20" alt="🎯" /> are supported
+	Value       int32
+	Emoticon    string
+	GameOutcome *MessagesEmojiGameOutcome `tl:"flag:0"`
 }
 
 func (*MessageMediaDice) CRC() uint32 {
-	return 0x3f7ee58b
+	return 0x8cbec07
+}
+
+func (*MessageMediaDice) FlagIndex() int {
+	return 0
 }
 
 func (*MessageMediaDice) ImplementsMessageMedia() {}
@@ -10170,10 +10219,10 @@ func (*StarGiftAuctionRoundObj) CRC() uint32 {
 func (*StarGiftAuctionRoundObj) ImplementsStarGiftAuctionRound() {}
 
 type StarGiftAuctionRoundExtendable struct {
-	Num           int32
-	Duration      int32
-	ExtendTop     int32
-	CurrentWindow int32
+	Num          int32
+	Duration     int32
+	ExtendTop    int32
+	ExtendWindow int32
 }
 
 func (*StarGiftAuctionRoundExtendable) CRC() uint32 {
@@ -11457,6 +11506,16 @@ func (*UpdateEditMessage) CRC() uint32 {
 }
 
 func (*UpdateEditMessage) ImplementsUpdate() {}
+
+type UpdateEmojiGameInfo struct {
+	Info EmojiGameInfo
+}
+
+func (*UpdateEmojiGameInfo) CRC() uint32 {
+	return 0xfb9c547a
+}
+
+func (*UpdateEmojiGameInfo) ImplementsUpdate() {}
 
 // Interlocutor is typing a message in an encrypted chat. Update period is 6 second. If upon this time there is no repeated update, it shall be considered that the interlocutor stopped typing.
 type UpdateEncryptedChatTyping struct {
@@ -15538,10 +15597,11 @@ type PaymentsStarGiftActiveAuctions interface {
 type PaymentsStarGiftActiveAuctionsObj struct {
 	Auctions []*StarGiftActiveAuctionState
 	Users    []User
+	Chats    []Chat
 }
 
 func (*PaymentsStarGiftActiveAuctionsObj) CRC() uint32 {
-	return 0x97f187d8
+	return 0xaef6abbc
 }
 
 func (*PaymentsStarGiftActiveAuctionsObj) ImplementsPaymentsStarGiftActiveAuctions() {}

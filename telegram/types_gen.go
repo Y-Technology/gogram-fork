@@ -98,6 +98,22 @@ func (*AccountPaidMessagesRevenue) CRC() uint32 {
 	return 0x1e109708
 }
 
+type AccountPasskeyRegistrationOptions struct {
+	Options *DataJson
+}
+
+func (*AccountPasskeyRegistrationOptions) CRC() uint32 {
+	return 0xe16b5ce1
+}
+
+type AccountPasskeys struct {
+	Passkeys []*Passkey
+}
+
+func (*AccountPasskeys) CRC() uint32 {
+	return 0xf8e0aa1c
+}
+
 // Configuration for two-factor authorization
 type AccountPassword struct {
 	HasRecovery             bool            `tl:"flag:0,encoded_in_bitflags"`
@@ -318,6 +334,14 @@ func (*AuthLoggedOut) CRC() uint32 {
 
 func (*AuthLoggedOut) FlagIndex() int {
 	return 0
+}
+
+type AuthPasskeyLoginOptions struct {
+	Options *DataJson
+}
+
+func (*AuthPasskeyLoginOptions) CRC() uint32 {
+	return 0xe2037789
 }
 
 // Recovery info of a 2FA password, only for accounts with a recovery email configured.
@@ -2489,6 +2513,16 @@ func (*MessagesDiscussionMessage) FlagIndex() int {
 	return 0
 }
 
+type MessagesEmojiGameOutcome struct {
+	Seed           []byte
+	StakeTonAmount int64
+	TonAmount      int64
+}
+
+func (*MessagesEmojiGameOutcome) CRC() uint32 {
+	return 0xda2ad647
+}
+
 // Info about chat invites exported by a certain admin.
 type MessagesExportedChatInvites struct {
 	Count   int32
@@ -2915,6 +2949,22 @@ func (*PageTableRow) CRC() uint32 {
 	return 0xe0c0c5e5
 }
 
+type Passkey struct {
+	ID              string
+	Name            string
+	Date            int32
+	SoftwareEmojiID int64 `tl:"flag:0"`
+	LastUsageDate   int32 `tl:"flag:1"`
+}
+
+func (*Passkey) CRC() uint32 {
+	return 0x98613ebf
+}
+
+func (*Passkey) FlagIndex() int {
+	return 0
+}
+
 // Payment identifier
 type PaymentCharge struct {
 	ID               string
@@ -3080,10 +3130,19 @@ type PaymentsStarGiftAuctionState struct {
 	UserState *StarGiftAuctionUserState
 	Timeout   int32
 	Users     []User
+	Chats     []Chat
 }
 
 func (*PaymentsStarGiftAuctionState) CRC() uint32 {
-	return 0xe98e474
+	return 0x6b39f4ec
+}
+
+type PaymentsStarGiftUpgradeAttributes struct {
+	Attributes []StarGiftAttribute
+}
+
+func (*PaymentsStarGiftUpgradeAttributes) CRC() uint32 {
+	return 0x46c6e36f
 }
 
 // A preview of the possible attributes (chosen randomly) a gift » can receive after upgrading it to a collectible gift », see here » for more info.
@@ -4006,16 +4065,6 @@ type StarGiftActiveAuctionState struct {
 
 func (*StarGiftActiveAuctionState) CRC() uint32 {
 	return 0xd31bc45d
-}
-
-type StarGiftActiveAuctions struct {
-	Auctions []*StarGiftActiveAuctionState
-	Users    []User
-	Chats    []Chat
-}
-
-func (*StarGiftActiveAuctions) CRC() uint32 {
-	return 0xaef6abbc
 }
 
 // Indicates the total number of gifts that have the specified attribute.
