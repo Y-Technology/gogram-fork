@@ -1540,14 +1540,14 @@ func (c *Client) AccountRegisterDevice(params *AccountRegisterDeviceParams) (boo
 }
 
 type AccountRegisterPasskeyParams struct {
-	Credential *InputPasskeyCredentialPublicKey
+	Credential InputPasskeyCredential
 }
 
 func (*AccountRegisterPasskeyParams) CRC() uint32 {
 	return 0x55b41fd6
 }
 
-func (c *Client) AccountRegisterPasskey(credential *InputPasskeyCredentialPublicKey) (*Passkey, error) {
+func (c *Client) AccountRegisterPasskey(credential InputPasskeyCredential) (*Passkey, error) {
 	responseData, err := c.MakeRequest(&AccountRegisterPasskeyParams{Credential: credential})
 	if err != nil {
 		return nil, errors.Wrap(err, "sending AccountRegisterPasskey")
@@ -3257,7 +3257,7 @@ func (c *Client) AuthExportLoginToken(apiID int32, apiHash string, exceptIds []i
 }
 
 type AuthFinishPasskeyLoginParams struct {
-	Credential    *InputPasskeyCredentialPublicKey
+	Credential    InputPasskeyCredential
 	FromDcID      int32 `tl:"flag:0"`
 	FromAuthKeyID int64 `tl:"flag:0"`
 }
@@ -3270,7 +3270,7 @@ func (*AuthFinishPasskeyLoginParams) FlagIndex() int {
 	return 0
 }
 
-func (c *Client) AuthFinishPasskeyLogin(credential *InputPasskeyCredentialPublicKey, fromDcID int32, fromAuthKeyID int64) (AuthAuthorization, error) {
+func (c *Client) AuthFinishPasskeyLogin(credential InputPasskeyCredential, fromDcID int32, fromAuthKeyID int64) (AuthAuthorization, error) {
 	responseData, err := c.MakeRequest(&AuthFinishPasskeyLoginParams{
 		Credential:    credential,
 		FromAuthKeyID: fromAuthKeyID,
@@ -5068,6 +5068,27 @@ func (c *Client) ChannelsGetFullChannel(channel InputChannel) (*MessagesChatFull
 	}
 
 	resp, ok := responseData.(*MessagesChatFull)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type ChannelsGetFutureCreatorAfterLeaveParams struct {
+	Channel InputChannel
+}
+
+func (*ChannelsGetFutureCreatorAfterLeaveParams) CRC() uint32 {
+	return 0xa00918af
+}
+
+func (c *Client) ChannelsGetFutureCreatorAfterLeave(channel InputChannel) (User, error) {
+	responseData, err := c.MakeRequest(&ChannelsGetFutureCreatorAfterLeaveParams{Channel: channel})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending ChannelsGetFutureCreatorAfterLeave")
+	}
+
+	resp, ok := responseData.(User)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -7861,11 +7882,12 @@ func (c *Client) MessagesAcceptEncryption(peer *InputEncryptedChat, gB []byte, k
 }
 
 type MessagesAcceptURLAuthParams struct {
-	WriteAllowed bool      `tl:"flag:0,encoded_in_bitflags"`
-	Peer         InputPeer `tl:"flag:1"`
-	MsgID        int32     `tl:"flag:1"`
-	ButtonID     int32     `tl:"flag:1"`
-	URL          string    `tl:"flag:2"`
+	WriteAllowed     bool      `tl:"flag:0,encoded_in_bitflags"`
+	SharePhoneNumber bool      `tl:"flag:3,encoded_in_bitflags"`
+	Peer             InputPeer `tl:"flag:1"`
+	MsgID            int32     `tl:"flag:1"`
+	ButtonID         int32     `tl:"flag:1"`
+	URL              string    `tl:"flag:2"`
 }
 
 func (*MessagesAcceptURLAuthParams) CRC() uint32 {
@@ -8126,6 +8148,27 @@ func (c *Client) MessagesClickSponsoredMessage(media, fullscreen bool, randomID 
 	}
 
 	resp, ok := responseData.(bool)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
+type MessagesCraftStarGiftParams struct {
+	Stargift []InputSavedStarGift
+}
+
+func (*MessagesCraftStarGiftParams) CRC() uint32 {
+	return 0xb0f9684f
+}
+
+func (c *Client) MessagesCraftStarGift(stargift []InputSavedStarGift) (Updates, error) {
+	responseData, err := c.MakeRequest(&MessagesCraftStarGiftParams{Stargift: stargift})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesCraftStarGift")
+	}
+
+	resp, ok := responseData.(Updates)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -8988,6 +9031,7 @@ type MessagesForwardMessagesParams struct {
 	DropAuthor           bool `tl:"flag:11,encoded_in_bitflags"`
 	DropMediaCaptions    bool `tl:"flag:12,encoded_in_bitflags"`
 	Noforwards           bool `tl:"flag:14,encoded_in_bitflags"`
+	AllowPaidFloodskip   bool `tl:"flag:19,encoded_in_bitflags"`
 	FromPeer             InputPeer
 	ID                   []int32
 	RandomID             []int64
@@ -8998,13 +9042,14 @@ type MessagesForwardMessagesParams struct {
 	ScheduleRepeatPeriod int32                   `tl:"flag:24"`
 	SendAs               InputPeer               `tl:"flag:13"`
 	QuickReplyShortcut   InputQuickReplyShortcut `tl:"flag:17"`
+	Effect               int64                   `tl:"flag:18"`
 	VideoTimestamp       int32                   `tl:"flag:20"`
 	AllowPaidStars       int64                   `tl:"flag:21"`
 	SuggestedPost        *SuggestedPost          `tl:"flag:23"`
 }
 
 func (*MessagesForwardMessagesParams) CRC() uint32 {
-	return 0x41d41ade
+	return 0x13704a7c
 }
 
 func (*MessagesForwardMessagesParams) FlagIndex() int {
@@ -9397,6 +9442,33 @@ func (c *Client) MessagesGetCommonChats(userID InputUser, maxID int64, limit int
 	return resp, nil
 }
 
+type MessagesGetCraftStarGiftsParams struct {
+	GiftID int64
+	Offset string
+	Limit  int32
+}
+
+func (*MessagesGetCraftStarGiftsParams) CRC() uint32 {
+	return 0xfd05dd00
+}
+
+func (c *Client) MessagesGetCraftStarGifts(giftID int64, offset string, limit int32) (*PaymentsSavedStarGifts, error) {
+	responseData, err := c.MakeRequest(&MessagesGetCraftStarGiftsParams{
+		GiftID: giftID,
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "sending MessagesGetCraftStarGifts")
+	}
+
+	resp, ok := responseData.(*PaymentsSavedStarGifts)
+	if !ok {
+		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
+	}
+	return resp, nil
+}
+
 type MessagesGetCustomEmojiDocumentsParams struct {
 	DocumentID []int64
 }
@@ -9625,13 +9697,13 @@ func (*MessagesGetEmojiGameInfoParams) CRC() uint32 {
 	return 0xfb7e8ca7
 }
 
-func (c *Client) MessagesGetEmojiGameInfo() (EmojiGameInfo, error) {
+func (c *Client) MessagesGetEmojiGameInfo() (MessagesEmojiGameInfo, error) {
 	responseData, err := c.MakeRequest(&MessagesGetEmojiGameInfoParams{})
 	if err != nil {
 		return nil, errors.Wrap(err, "sending MessagesGetEmojiGameInfo")
 	}
 
-	resp, ok := responseData.(EmojiGameInfo)
+	resp, ok := responseData.(MessagesEmojiGameInfo)
 	if !ok {
 		panic("got invalid response type: " + reflect.TypeOf(responseData).String())
 	}
@@ -15194,6 +15266,7 @@ func (c *Client) PaymentsGetPremiumGiftCodeOptions(boostPeer InputPeer) ([]*Prem
 type PaymentsGetResaleStarGiftsParams struct {
 	SortByPrice    bool  `tl:"flag:1,encoded_in_bitflags"`
 	SortByNum      bool  `tl:"flag:2,encoded_in_bitflags"`
+	ForCraft       bool  `tl:"flag:4,encoded_in_bitflags"`
 	AttributesHash int64 `tl:"flag:0"`
 	GiftID         int64
 	Attributes     []StarGiftAttributeID `tl:"flag:3"`

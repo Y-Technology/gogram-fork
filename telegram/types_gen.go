@@ -1926,16 +1926,6 @@ func (*InputFolderPeer) CRC() uint32 {
 	return 0xfbd2c296
 }
 
-type InputPasskeyCredentialPublicKey struct {
-	ID       string
-	RawID    string
-	Response InputPasskeyResponse
-}
-
-func (*InputPasskeyCredentialPublicKey) CRC() uint32 {
-	return 0x3c27b78f
-}
-
 // Notification settings.
 type InputPeerNotifySettings struct {
 	ShowPreviews      bool              `tl:"flag:0"`
@@ -3824,10 +3814,11 @@ type SavedStarGift struct {
 	PrepaidUpgradeHash       string            `tl:"flag:16"`
 	DropOriginalDetailsStars int64             `tl:"flag:18"`
 	GiftNum                  int32             `tl:"flag:19"`
+	CanCraftAt               int32             `tl:"flag:20"`
 }
 
 func (*SavedStarGift) CRC() uint32 {
-	return 0xead6805e
+	return 0x41df43fc
 }
 
 func (*SavedStarGift) FlagIndex() int {
